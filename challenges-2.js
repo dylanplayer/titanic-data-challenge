@@ -25,8 +25,13 @@
 // Or if property = 'age' -> [40, 26, 22, 28, 23, 45, 21, ...]
 
 const getAllValuesForProperty = (data, property) => {
-	return []
+	return data.map((passenger) => {
+		return passenger.fields[property];
+	});
 }
+
+// const data = require('./titanic-passengers.json');
+// console.log(getAllValuesForProperty(data, 'embarked'));
 
 // 2 -------------------------------------------------------------
 // Return an array where a given property matches the given value
@@ -34,7 +39,9 @@ const getAllValuesForProperty = (data, property) => {
 // array of all the male passengers [{...}, {...}, {...}, ...]
 
 const filterByProperty = (data, property, value) => {
-	return []
+	return data.filter((passenger) => {
+		return passenger.fields[property] && passenger.fields[property] == value;
+	});
 }
 
 // 3 -------------------------------------------------------------
@@ -43,7 +50,9 @@ const filterByProperty = (data, property, value) => {
 // given property have been removed
 
 const filterNullForProperty = (data, property) => {
-	return []
+	return data.filter((passenger) => {
+		return passenger.fields[property] !== undefined | null;
+	});
 }
 
 // 4 -------------------------------------------------------------
@@ -52,9 +61,11 @@ const filterNullForProperty = (data, property) => {
 // Return the total of all values for a given property. This
 
 const sumAllProperty = (data, property) => {
-	return 0
+	data = filterNullForProperty(data, property);
+	return data.reduce((sum, passenger) => {
+		return sum + passenger.fields[property];
+	}, 0);
 }
-
 
 // 5 -------------------------------------------------------------
 // Count unique values for property. The goal here is return an 
@@ -67,9 +78,29 @@ const sumAllProperty = (data, property) => {
 // at Cherbourg, 77 emabrked at Queenstown, and 2 are undedfined
 
 const countAllProperty = (data, property) => {
-	return {}
+	const histogram = {};
+	const values = getAllValuesForProperty(data, property);
+
+	for (let value of values) {
+		let found = false;
+
+		for (let key of Object.keys(histogram)) {
+			if (String(key) == String(value)) {
+				histogram[String(key)] += 1;
+				found = true;
+			}
+		}
+
+		if (!found) {
+			histogram[String(value)] = 1;
+		}
+	}
+	return histogram;
 }
 
+// const data = require('./titanic-passengers.json');
+// const histogram = countAllProperty(data, 'embarked');
+// console.log(histogram);
 
 // 6 ------------------------------------------------------------
 // Make histogram. The goal is to return an array with values 
@@ -77,8 +108,22 @@ const countAllProperty = (data, property) => {
 // of items in each bucket.
 
 const makeHistogram = (data, property, step) => {
-	return []
+	data = filterNullForProperty(data, property);
+	let values = getAllValuesForProperty(data, property);
+	values = values.reduce((histogram, value) => {
+		if (histogram[Math.floor(value / step)] === undefined) {
+			histogram[Math.floor(value / step)] = 1;
+		} else {
+			histogram[Math.floor(value / step)] += 1;
+		}
+		return histogram;
+	}, []);
+	return Array.from(values, (value) => value || 0);
 }
+
+// const data = require('./titanic-passengers.json');
+// const histogram = makeHistogram(data, 'age', 1);
+// console.log(histogram);
 
 // 7 ------------------------------------------------------------
 // normalizeProperty takes data and a property and returns an 
@@ -86,7 +131,10 @@ const makeHistogram = (data, property, step) => {
 // to divide each value by the maximum value in the array.
 
 const normalizeProperty = (data, property) => {
-	return []
+	data = filterNullForProperty(data, property);
+	const values = getAllValuesForProperty(data, property);
+	const max = Math.max(...values);
+	return values.map((value) => value / max);
 }
 
 // 8 ------------------------------------------------------------
@@ -97,7 +145,8 @@ const normalizeProperty = (data, property) => {
 // would return ['male', 'female']
 
 const getUniqueValues = (data, property) => {
-	return []
+	const values = getAllValuesForProperty(data, property);
+	return [...new Set(values)].sort();
 }
 
 // --------------------------------------------------------------

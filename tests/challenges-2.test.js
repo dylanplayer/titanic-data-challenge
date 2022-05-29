@@ -30,43 +30,7 @@ beforeAll((done) => {
 
 describe('Challenge 2 Titanic', () => {
 
-	// Beucause these tests return long arrays of data it was 
-	// impractical to hard code all these arrays here so the 
-	// below generates the lists from the data! The code below 
-	// are the answers to the questions. Don't peak unless you 
-	// are really stuck on a problem. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	test.skip('Test getAll', () => {
+	test('Test getAll', () => {
 		const allFares = data.map(p => p.fields.fare)
 		const allPclass = data.map(p => p.fields.pclass)
 		const allEmbarked = data.map(p => p.fields.embarked)
@@ -76,7 +40,7 @@ describe('Challenge 2 Titanic', () => {
 		expect(index.getAllValuesForProperty(data, 'embarked')).toEqual(allEmbarked)
 	})
 
-	test.skip('Test filterByProperty', () => {
+	test('Test filterByProperty', () => {
 		const allMale = data.filter(p => p.fields.sex === 'male')
 		const allFemale = data.filter(p => p.fields.sex === 'female')
 
@@ -84,7 +48,7 @@ describe('Challenge 2 Titanic', () => {
 		expect(index.filterByProperty(data, 'sex', 'female')).toEqual(allFemale)
 	})
 
-	test.skip('Test filterNullForProperty', () => {
+	test('Test filterNullForProperty', () => {
 		const faresNotNull = data.filter(p => p.fields.fare !== undefined)
 		const agesNotNull = data.filter(p => p.fields.age !== undefined)
 		const pclassNotNull = data.filter(p => p.fields.pclass !== undefined)
@@ -94,7 +58,7 @@ describe('Challenge 2 Titanic', () => {
 		expect(index.filterNullForProperty(data, 'pclass')).toEqual(pclassNotNull)
 	})
 
-	test.skip('Test sumAllProperty', () => {
+	test('Test sumAllProperty', () => {
 		const sumAges = data.reduce((acc, p) => p.fields.age !== undefined ? acc + p.fields.age : acc, 0)
 		const sumFares = data.reduce((acc, p) => p.fields.fare !== undefined ? acc + p.fields.fare : acc, 0)
 
@@ -102,7 +66,7 @@ describe('Challenge 2 Titanic', () => {
 		expect(index.sumAllProperty(data, 'fare')).toBe(sumFares)
 	})
 
-	test.skip('Test countAllProperty', () => {
+	test('Test countAllProperty', () => {
 		const embarkedCounts = data.reduce((acc, p) => {
 			if (acc[p.fields.embarked] === undefined) {
 				acc[p.fields.embarked] = 1
@@ -164,19 +128,12 @@ describe('Challenge 2 Titanic', () => {
 			return acc 
 		}, [])
 
-		console.log('Ages 5 ---------------')
-		console.log(ages10)
-		console.log('Ages 10 ---------------')
-		console.log(ages5)
-		console.log('Fares ---------------')
-		console.log(fares)
-
 		expect(index.makeHistogram(data, 'age', 10)).toEqual(Array.from(ages10, v => v || 0))
 		expect(index.makeHistogram(data, 'age', 5)).toEqual(Array.from(ages5, v => v || 0))
 		expect(index.makeHistogram(data, 'fare', 10)).toEqual(Array.from(fares, v => v || 0))
 	})
 
-	test.skip('Test normalizeProperty', () => {
+	test('Test normalizeProperty', () => {
 		const ages = data.filter(p => p.fields.age !== undefined).map(p => p.fields.age)
 		const maxAge = Math.max(...ages)
 		const normalizedAges = ages.map(v => v / maxAge)
@@ -189,7 +146,7 @@ describe('Challenge 2 Titanic', () => {
 		expect(index.normalizeProperty(data, 'fare')).toEqual(normalizedFares)
 	})
 
-	test.skip('Test getUniqueValues', () => {
+	test('Test getUniqueValues', () => {
 		expect(index.getUniqueValues(data, 'pclass').sort()).toEqual([3, 2, 1].sort())
 		expect(index.getUniqueValues(data, 'embarked').sort()).toEqual(['C', 'S', 'Q', undefined].sort())
 		expect(index.getUniqueValues(data, 'sex').sort()).toEqual(['male', 'female'].sort())
